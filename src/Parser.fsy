@@ -48,7 +48,7 @@ let mkNode (parseState: IParseState, inputIdx: int, e: UntypedExpr): UntypedAST 
 %token <unit> LIT_UNIT
 
 // Tokens for arithmetic operators
-%token TIMES PLUS MINUS   // we add "MINUS" here
+%token TIMES PLUS MINUS   
 
 // Tokens for logical operators
 %token AND OR NOT

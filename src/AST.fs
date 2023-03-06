@@ -87,35 +87,28 @@ and Expr<'E,'T> =
     | Var of name: string
 
     /// Addition between lhs and rhs.
-    | Add of lhs: Node<'E,'T>
-           * rhs: Node<'E,'T>
+    | Add of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
     /// Subtraction between lhs and rhs.
-    | Sub of lhs: Node<'E,'T>
-           * rhs: Node<'E,'T>
+    | Sub of lhs: Node<'E,'T> * rhs: Node<'E,'T>
            
     /// Multiplication between lhs and rhs.
-    | Mult of lhs: Node<'E,'T>
-            * rhs: Node<'E,'T>
+    | Mult of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
     /// Logical and between lhs and rhs.
-    | And of lhs: Node<'E,'T>
-           * rhs: Node<'E,'T>
+    | And of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
     /// Logical or between lhs and rhs.
-    | Or of lhs: Node<'E,'T>
-          * rhs: Node<'E,'T>
+    | Or of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
     /// Logical not
     | Not of arg: Node<'E,'T>
 
     /// Comparison: is the lhs equal to the rhs?
-    | Eq of lhs: Node<'E,'T>
-          * rhs: Node<'E,'T>
+    | Eq of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
     /// Comparison: is the lhs less than the rhs?
-    | Less of lhs: Node<'E,'T>
-            * rhs: Node<'E,'T>
+    | Less of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
     /// Read an integer value from the console.
     | ReadInt
