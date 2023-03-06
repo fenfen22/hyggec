@@ -155,7 +155,7 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
             Ok { Pos = node.Pos; Env = env; Type = tpe; Expr = Add(tlhs, trhs) }
         | Error(es) -> Error(es)
     
-    |Sub(lhs,rhs)->
+    | Sub(lhs,rhs)->
         match (binaryNumericalOpTyper "substraction" node.Pos env lhs rhs) with
         | Ok(tpe, tlhs, trhs)->
             Ok { Pos = node.Pos; Env = env; Type = tpe; Expr = Sub(tlhs, trhs)}
@@ -166,6 +166,12 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
         | Ok(tpe, tlhs, trhs) ->
             Ok { Pos = node.Pos; Env = env; Type = tpe; Expr = Mult(tlhs, trhs) }
         | Error(es) -> Error(es)
+
+    | Div(lhs, rhs) ->
+        match (binaryNumericalOpTyper "division" node.Pos env lhs rhs) with
+        | Ok(tpe, tlhs, trhs)->
+            Ok { Pos = node.Pos; Env = env; Type = tpe; Expr = Div(tlhs, trhs)}
+        | Error(es) -> Error(es) 
 
     | And(lhs, rhs) ->
         match (binaryBooleanOpTyper "and" node.Pos env lhs rhs) with

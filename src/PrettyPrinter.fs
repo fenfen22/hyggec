@@ -88,6 +88,7 @@ let rec internal formatASTRec (node: AST.Node<'E,'T>): Tree =
     | StringVal(value) -> mkTree $"StringVal \"%s{value}\"" node []
     | Var(name) -> mkTree $"Var %s{name}" node []
     | Mult(lhs, rhs) -> mkTree "Mult" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Div(lhs,rhs) -> mkTree "Div" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Add(lhs, rhs) -> mkTree "Add" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Sub(lhs, rhs) -> mkTree "Sub" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]                       
     | And(lhs, rhs) -> mkTree "And" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]

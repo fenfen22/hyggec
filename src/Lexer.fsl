@@ -53,7 +53,8 @@ rule tokenize = parse
 // Operators
 | "*"          { Parser.TIMES }
 | "+"          { Parser.PLUS }
-| "-"          { Parser.MINUS}   
+| "-"          { Parser.MINUS} 
+| "/"          { Parser.DIV}  
 | "and"        { Parser.AND }
 | "or"         { Parser.OR }
 | "not"        { Parser.NOT }
