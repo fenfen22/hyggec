@@ -131,6 +131,16 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
                 Some(env', {node with Expr = Not(arg2)})
             | None -> None
 
+    | Sqrt(arg) ->
+        match arg.Expr with
+        | FloatVal(v) ->
+            Some (env, {node with Expr = FloatVal(sqrt v)})
+        | _ ->
+            match (reduce env arg) with
+            | Some(env', arg') ->
+                Some(env', {node with Expr = Sqrt(arg')})
+            | None ->None
+        
     | Eq(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
         | (IntVal(v1), IntVal(v2)) ->

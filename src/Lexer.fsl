@@ -85,6 +85,7 @@ rule tokenize = parse
 | "mutable"    { Parser.MUTABLE }
 | "while"      { Parser.WHILE }
 | "do"         { Parser.DO }
+| "sqrt"       { Parser.SQRT}
 
 // Generic identifier
 | ident        { Parser.IDENT(LexBuffer<_>.LexemeString lexbuf) }

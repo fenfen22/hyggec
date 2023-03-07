@@ -188,6 +188,10 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
         /// to increase its target register)
         let asm = doCodegen env arg
         asm.AddText(RV.SEQZ(Reg.r(env.Target), Reg.r(env.Target)))
+ 
+    | Sqrt(arg) ->
+        let asm: Asm = doCodegen env arg
+        asm.AddText(RV.FSQRT_S(FPReg.r(env.Target), FPReg.r(env.Target)),"Take the square root")
 
     | Eq(lhs, rhs)
     | Less(lhs, rhs) as expr ->

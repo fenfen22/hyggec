@@ -8,3 +8,4 @@ readInt readFloat
 print println
 assert
 let
+sqrt

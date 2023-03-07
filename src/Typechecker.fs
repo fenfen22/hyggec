@@ -194,6 +194,16 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
                               + $"found %O{arg.Type}")])
         | Error(es) -> Error(es)
 
+    | Sqrt(arg) ->
+        match (typer env arg) with
+        | Ok(targ) when (isSubtypeOf env targ.Type TFloat) ->
+            Ok { Pos = node.Pos; Env = env; Type = TFloat; Expr = Sqrt(targ) }
+        |Ok(arg) ->
+            Error([(node.Pos, $"sqrt: expected argument of type %O{TFloat}, "
+                              + $"found %O{arg.Type}")]) 
+        | Error(es) -> Error(es)            
+
+
     | Eq(lhs, rhs) ->
         match (numericalRelationTyper "equal to" node.Pos env lhs rhs) with
         | Ok(tlhs, trhs) ->

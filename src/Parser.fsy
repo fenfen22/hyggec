@@ -73,6 +73,7 @@ let mkNode (parseState: IParseState, inputIdx: int, e: UntypedExpr): UntypedAST 
 %token READ_FLOAT
 %token PRINT
 %token PRINTLN
+%token SQRT
 %token ASSERT
 %token MATCH
 %token WITH
@@ -181,6 +182,7 @@ unaryExpr:
   | READ_FLOAT LPAR RPAR          { mkNode(parseState, 1, Expr.ReadFloat) }
   | PRINT LPAR simpleExpr RPAR    { mkNode(parseState, 1, Expr.Print($3)) }
   | PRINTLN LPAR simpleExpr RPAR  { mkNode(parseState, 1, Expr.PrintLn($3)) }
+  | SQRT LPAR simpleExpr RPAR     { mkNode(parseState, 1, Expr.Sqrt($3)) }
   | ASSERT LPAR simpleExpr RPAR   { mkNode(parseState, 1, Expr.Assertion($3)) }
   | ascriptionExpr                { $1 }
 
