@@ -91,6 +91,7 @@ let rec internal formatASTRec (node: AST.Node<'E,'T>): Tree =
     | Div(lhs, rhs) -> mkTree "Div" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Add(lhs, rhs) -> mkTree "Add" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Sub(lhs, rhs) -> mkTree "Sub" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]                       
+    | Rem(lhs, rhs) -> mkTree "Rem" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | And(lhs, rhs) -> mkTree "And" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Or(lhs, rhs) -> mkTree "Or" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Not(arg) -> mkTree "Not" node [("arg", formatASTRec arg)]

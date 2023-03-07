@@ -97,7 +97,10 @@ and Expr<'E,'T> =
 
     /// Division between lhs and rhs.
     | Div of lhs: Node<'E,'T> * rhs: Node<'E,'T>
-
+    
+    /// Remainder between lhs and rhs.
+    | Rem of lhs: Node<'E,'T> * rhs: Node<'E,'T>
+    
     /// Squart root of the argument
     | Sqrt of arg: Node<'E,'T>
 
