@@ -89,6 +89,7 @@ rule tokenize = parse
 | "do"         { Parser.DO }
 | "sqrt"       { Parser.SQRT}
 | "max"        { Parser.MAX}
+| "min"        { Parser.MIN}
 
 // Generic identifier
 | ident        { Parser.IDENT(LexBuffer<_>.LexemeString lexbuf) }
