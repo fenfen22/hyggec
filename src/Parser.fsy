@@ -48,7 +48,7 @@ let mkNode (parseState: IParseState, inputIdx: int, e: UntypedExpr): UntypedAST 
 %token <unit> LIT_UNIT
 
 // Tokens for arithmetic operators
-%token TIMES PLUS MINUS   
+%token TIMES PLUS MINUS DIV // we add "DIV" here   
 
 // Tokens for logical operators
 %token AND OR NOT
@@ -164,6 +164,7 @@ relExpr:
 addExpr:
   | addExpr PLUS multExpr   { mkNode(parseState, 2, Expr.Add($1, $3)) }
   | addExpr MINUS multExpr  { mkNode(parseState, 2, Expr.Sub($1, $3)) }
+  | addExpr DIV multExpr    { mkNode(parseState, 2, Expr.Div($1, $3)) }
   | multExpr                { $1 }
 
 // Multiplicative expression

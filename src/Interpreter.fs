@@ -65,6 +65,18 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Mult(lhs', rhs')})
             | None -> None
+    
+    | Div(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = IntVal(v1 / v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = FloatVal(v1 / v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Div(lhs', rhs')})
+            | None -> None
 
     | Add(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
