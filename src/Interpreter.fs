@@ -174,6 +174,18 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Less(lhs', rhs')})
             | None -> None
+    
+    | Lesseq(lhs, rhs) ->
+        match(lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 <= v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 <= v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Lesseq(lhs', rhs')})
+            | None -> None
 
     | ReadInt ->
         match env.Reader with

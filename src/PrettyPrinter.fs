@@ -98,6 +98,7 @@ let rec internal formatASTRec (node: AST.Node<'E,'T>): Tree =
     | Sqrt(arg) -> mkTree "Sqrt" node [("arg", formatASTRec arg)]
     | Eq(lhs, rhs) -> mkTree "Eq" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | Less(lhs, rhs) -> mkTree "Less" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Lesseq(lhs, rhs) -> mkTree "Lesseq" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | ReadInt -> mkTree "ReadInt" node []
     | ReadFloat -> mkTree "ReadFloat" node []
     | Print(arg) -> mkTree "Print" node [("arg", formatASTRec arg)]
