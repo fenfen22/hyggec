@@ -64,6 +64,7 @@ rule tokenize = parse
 | "<"          { Parser.LT }
 | "<-"         { Parser.LARROW }
 | "<="         { Parser.LESSEQ}
+| ">"          { Parser.LARGE}
 
 // Parentheses and brackets
 | "("          { Parser.LPAR }

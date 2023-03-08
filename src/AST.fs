@@ -119,6 +119,9 @@ and Expr<'E,'T> =
     /// Comparison: is the lhs less than the rhs?
     | Less of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
+    /// Comparison: is the lhs large than the rhs?
+    | Large of lhs: Node<'E,'T> * rhs: Node<'E,'T>
+
     /// Comparison ： is the lhs less than or equal to the rhs?
     | LessEq of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 

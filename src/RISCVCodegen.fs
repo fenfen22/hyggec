@@ -199,6 +199,7 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
 
     | Eq(lhs, rhs)
     | LessEq(lhs, rhs)
+    | Large(lhs, rhs)
     | Less(lhs, rhs) as expr ->
         // Code generation for equality and less-than relations is very similar:
         // we compile the lhs and rhs giving them different target registers,
@@ -229,6 +230,7 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
             let labelName = match expr with
                             | Eq(_,_) -> "eq"
                             | Less(_,_) -> "less"
+                            | Large(_,_) -> "large"
                             | LessEq(_,_) -> "lesseq"
                             | x -> failwith $"BUG: unexpected operation %O{x}"
             /// Label to jump to when the comparison is true
@@ -243,6 +245,8 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     Asm(RV.BEQ(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
                 | Less(_,_) ->
                     Asm(RV.BLT(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
+                | Large(_,_) ->
+                    Asm(RV.BGT(Reg.r(env.Target), Reg.r(rtarget), trueLabel))   //need to be changed
                 | LessEq(_,_) ->
                     Asm(RV.BLE(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
@@ -268,6 +272,8 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     Asm(RV.FEQ_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | Less(_,_) ->
                     Asm(RV.FLT_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
+                | Large(_,_) ->
+                    Asm(RV.FGT_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))  //need to be changed
                 | LessEq(_,_) ->
                     Asm(RV.FLE_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
