@@ -110,6 +110,9 @@ and Expr<'E,'T> =
     /// Logical or between lhs and rhs.
     | Or of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
+    /// Logical Exclusiveor between lhs and rhs.
+    | Xor of lhs: Node<'E,'T> * rhs: Node<'E,'T>
+
     /// Logical not
     | Not of arg: Node<'E,'T>
 

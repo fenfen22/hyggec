@@ -51,7 +51,7 @@ let mkNode (parseState: IParseState, inputIdx: int, e: UntypedExpr): UntypedAST 
 %token TIMES PLUS MINUS DIV REM  // we add "REM" here   
 
 // Tokens for logical operators
-%token AND OR NOT
+%token AND OR NOT XOR
 
 // Tokens for relational operators
 %token EQ LT LESSEQ LARGE LARGEEQ
@@ -155,6 +155,11 @@ orExpr:
 // Logical 'and' expression
 andExpr:
   | andExpr AND relExpr  { mkNode(parseState, 2, Expr.And($1, $3)) }
+  | xorExpr              { $1 }
+
+// Logical 'xor' expression
+xorExpr:
+  | andExpr XOR relExpr  { mkNode(parseState, 2, Expr.Xor($1, $3)) }
   | relExpr              { $1 }
 
 // Relational expression

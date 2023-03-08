@@ -37,6 +37,8 @@ let rec subst (node: Node<'E,'T>) (var: string) (sub: Node<'E,'T>): Node<'E,'T> 
         {node with Expr = And((subst lhs var sub), (subst rhs var sub))}
     | Or(lhs, rhs) ->
         {node with Expr = Or((subst lhs var sub), (subst rhs var sub))}
+    | Xor(lhs, rhs) ->
+        {node with Expr = Xor((subst lhs var sub), (subst rhs var sub))}
     | Not(arg) ->
         {node with Expr = Not(subst arg var sub)}
     | Sqrt(arg) ->
