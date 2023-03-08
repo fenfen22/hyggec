@@ -200,6 +200,7 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
     | Eq(lhs, rhs)
     | LessEq(lhs, rhs)
     | Large(lhs, rhs)
+    | LargeEq(lhs, rhs)
     | Less(lhs, rhs) as expr ->
         // Code generation for equality and less-than relations is very similar:
         // we compile the lhs and rhs giving them different target registers,
@@ -232,6 +233,7 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                             | Less(_,_) -> "less"
                             | Large(_,_) -> "large"
                             | LessEq(_,_) -> "lesseq"
+                            | LargeEq(_,_) -> "largeeq"
                             | x -> failwith $"BUG: unexpected operation %O{x}"
             /// Label to jump to when the comparison is true
             let trueLabel = Util.genSymbol $"%O{labelName}_true"
@@ -249,6 +251,8 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     Asm(RV.BGT(Reg.r(env.Target), Reg.r(rtarget), trueLabel))   //need to be changed
                 | LessEq(_,_) ->
                     Asm(RV.BLE(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
+                | LargeEq(_,_) ->
+                    Asm(RV.BGE(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
 
             // Put everything together
@@ -276,6 +280,8 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     Asm(RV.FGT_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))  //need to be changed
                 | LessEq(_,_) ->
                     Asm(RV.FLE_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
+                | LargeEq(_,_) ->
+                    Asm(RV.FGE_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
             // Put everything together
             (lAsm ++ rAsm ++ opAsm)

@@ -49,6 +49,8 @@ let rec subst (node: Node<'E,'T>) (var: string) (sub: Node<'E,'T>): Node<'E,'T> 
         {node with Expr = Large((subst lhs var sub), (subst rhs var sub))}
     | LessEq(lhs, rhs) ->
         {node with Expr = LessEq((subst lhs var sub), (subst rhs var sub))}
+    | LargeEq(lhs, rhs) ->
+        {node with Expr = LargeEq((subst lhs var sub), (subst rhs var sub))}
 
     | ReadInt
     | ReadFloat -> node // The substitution has no effect

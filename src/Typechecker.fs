@@ -231,6 +231,11 @@ let rec internal typer (env: TypingEnv) (node: UntypedAST): TypingResult =
         | Ok(tlhs, trhs) ->
             Ok { Pos = node.Pos; Env = env; Type = TBool; Expr = LessEq(tlhs, trhs) }
         | Error(es) -> Error(es)
+     | LargeEq(lhs, rhs) ->
+        match (numericalRelationTyper "large than or equal to" node.Pos env lhs rhs) with
+        | Ok(tlhs, trhs) ->
+            Ok { Pos = node.Pos; Env = env; Type = TBool; Expr = LargeEq(tlhs, trhs) }
+        | Error(es) -> Error(es)
 
     | ReadInt ->
         Ok {Pos = node.Pos; Env = env; Type = TInt; Expr = ReadInt}

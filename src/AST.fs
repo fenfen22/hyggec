@@ -125,6 +125,9 @@ and Expr<'E,'T> =
     /// Comparison ： is the lhs less than or equal to the rhs?
     | LessEq of lhs: Node<'E,'T> * rhs: Node<'E,'T>
 
+    /// Comparison ： is the lhs large than or equal to the rhs?
+    | LargeEq of lhs: Node<'E,'T> * rhs: Node<'E,'T>
+
     /// Read an integer value from the console.
     | ReadInt
 
