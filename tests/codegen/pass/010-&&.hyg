@@ -1,0 +1,3 @@
+assert(if (true && true) then true else false);
+assert(if (false && true) then false else true);
+assert(if (true && false) then false else true)
