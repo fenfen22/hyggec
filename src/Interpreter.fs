@@ -65,6 +65,18 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Mult(lhs', rhs')})
             | None -> None
+    
+    | Div(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = IntVal(v1 / v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = FloatVal(v1 / v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Div(lhs', rhs')})
+            | None -> None
 
     | Add(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
@@ -76,6 +88,27 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             match (reduceLhsRhs env lhs rhs) with
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Add(lhs', rhs')})
+            | None -> None
+    | Sub(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = IntVal(v1 - v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = FloatVal(v1 - v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Sub(lhs', rhs')})
+            | None -> None
+    
+    | Rem(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = IntVal(v1 % v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Rem(lhs', rhs')})
             | None -> None
 
     | And(lhs, rhs) ->
@@ -97,6 +130,16 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Or(lhs', rhs')})
             | None -> None
+    
+    | Xor(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (BoolVal(v1), BoolVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 <> v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Xor(lhs', rhs')})
+            | None -> None
 
     | Not(arg) ->
         match arg.Expr with
@@ -108,6 +151,16 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
                 Some(env', {node with Expr = Not(arg2)})
             | None -> None
 
+    | Sqrt(arg) ->
+        match arg.Expr with
+        | FloatVal(v) ->
+            Some (env, {node with Expr = FloatVal(sqrt v)})
+        | _ ->
+            match (reduce env arg) with
+            | Some(env', arg') ->
+                Some(env', {node with Expr = Sqrt(arg')})
+            | None ->None
+        
     | Eq(lhs, rhs) ->
         match (lhs.Expr, rhs.Expr) with
         | (IntVal(v1), IntVal(v2)) ->
@@ -130,6 +183,42 @@ let rec internal reduce (env: RuntimeEnv<'E,'T>)
             match (reduceLhsRhs env lhs rhs) with
             | Some(env', lhs', rhs') ->
                 Some(env', {node with Expr = Less(lhs', rhs')})
+            | None -> None
+    
+    | Large(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 > v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 > v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = Large(lhs', rhs')})
+            | None -> None
+    
+    | LessEq(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 <= v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 <= v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = LessEq(lhs', rhs')})
+            | None -> None
+
+    | LargeEq(lhs, rhs) ->
+        match (lhs.Expr, rhs.Expr) with
+        | (IntVal(v1), IntVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 >= v2)})
+        | (FloatVal(v1), FloatVal(v2)) ->
+            Some(env, {node with Expr = BoolVal(v1 >= v2)})
+        | (_, _) ->
+            match (reduceLhsRhs env lhs rhs) with
+            | Some(env', lhs', rhs') ->
+                Some(env', {node with Expr = LargeEq(lhs', rhs')})
             | None -> None
 
     | ReadInt ->

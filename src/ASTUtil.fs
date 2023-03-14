@@ -25,20 +25,34 @@ let rec subst (node: Node<'E,'T>) (var: string) (sub: Node<'E,'T>): Node<'E,'T> 
 
     | Add(lhs, rhs) ->
         {node with Expr = Add((subst lhs var sub), (subst rhs var sub))}
+    | Sub(lhs, rhs) ->
+        {node with Expr = Sub((subst lhs var sub), (subst rhs var sub))}
     | Mult(lhs, rhs) ->
         {node with Expr = Mult((subst lhs var sub), (subst rhs var sub))}
-
+    | Div(lhs,rhs)->
+        {node with Expr = Div((subst lhs var sub), (subst rhs var sub))}
+    | Rem(lhs, rhs) ->
+        {node with Expr = Rem((subst lhs var sub), (subst rhs var sub))}
     | And(lhs, rhs) ->
         {node with Expr = And((subst lhs var sub), (subst rhs var sub))}
     | Or(lhs, rhs) ->
         {node with Expr = Or((subst lhs var sub), (subst rhs var sub))}
+    | Xor(lhs, rhs) ->
+        {node with Expr = Xor((subst lhs var sub), (subst rhs var sub))}
     | Not(arg) ->
         {node with Expr = Not(subst arg var sub)}
-
+    | Sqrt(arg) ->
+        {node with Expr = Sqrt(subst arg var sub)}
     | Eq(lhs, rhs) ->
         {node with Expr = Eq((subst lhs var sub), (subst rhs var sub))}
     | Less(lhs, rhs) ->
         {node with Expr = Less((subst lhs var sub), (subst rhs var sub))}
+    | Large(lhs, rhs) ->
+        {node with Expr = Large((subst lhs var sub), (subst rhs var sub))}
+    | LessEq(lhs, rhs) ->
+        {node with Expr = LessEq((subst lhs var sub), (subst rhs var sub))}
+    | LargeEq(lhs, rhs) ->
+        {node with Expr = LargeEq((subst lhs var sub), (subst rhs var sub))}
 
     | ReadInt
     | ReadFloat -> node // The substitution has no effect

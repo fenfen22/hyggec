@@ -1,0 +1,3 @@
+assert( 2.0f >= 4.4f);
+assert( 4.0f >= 2);
+assert( 0 >= 3)

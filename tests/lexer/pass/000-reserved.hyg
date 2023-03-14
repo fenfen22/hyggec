@@ -8,3 +8,6 @@ readInt readFloat
 print println
 assert
 let
+sqrt
+max
+min

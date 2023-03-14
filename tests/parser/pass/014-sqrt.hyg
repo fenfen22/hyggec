@@ -1,0 +1,3 @@
+sqrt(3 < "Hello!");
+sqrt(print(42.0f));
+print(sqrt(3))

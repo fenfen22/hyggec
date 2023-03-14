@@ -99,6 +99,9 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
             | None -> failwith $"BUG: variable without storage: %s{name}"
 
     | Add(lhs, rhs)
+    | Sub(lhs,rhs)
+    | Div(lhs,rhs)
+    | Rem(lhs, rhs)
     | Mult(lhs, rhs) as expr ->
         // Code generation for addition and multiplication is very
         // similar: we compile the lhs and rhs giving them different target
@@ -120,9 +123,18 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     | Add(_,_) ->
                         Asm(RV.ADD(Reg.r(env.Target),
                                    Reg.r(env.Target), Reg.r(rtarget)))
+                    | Sub(_,_) ->
+                        Asm(RV.SUB(Reg.r(env.Target),
+                                   Reg.r(env.Target), Reg.r(rtarget)))
                     | Mult(_,_) ->
                         Asm(RV.MUL(Reg.r(env.Target),
                                    Reg.r(env.Target), Reg.r(rtarget)))
+                    | Div(_,_) ->
+                        Asm(RV.DIV(Reg.r(env.Target),
+                                   Reg.r(env.Target), Reg.r(rtarget)))  
+                    | Rem(_,_) ->
+                        Asm(RV.REM(Reg.r(env.Target),
+                                   Reg.r(env.Target), Reg.r(rtarget)))             
                     | x -> failwith $"BUG: unexpected operation %O{x}"
             // Put everything together
             lAsm ++ rAsm ++ opAsm
@@ -137,8 +149,14 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                 | Add(_,_) ->
                     Asm(RV.FADD_S(FPReg.r(env.FPTarget),
                                   FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
+                | Sub(_,_) ->
+                    Asm(RV.FSUB_S(FPReg.r(env.FPTarget),
+                                  FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | Mult(_,_) ->
                     Asm(RV.FMUL_S(FPReg.r(env.FPTarget),
+                                  FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
+                | Div(_,_) ->
+                    Asm(RV.FDIV_S(FPReg.r(env.FPTarget),
                                   FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
             // Put everything together
@@ -147,6 +165,7 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
             failwith $"BUG: numerical operation codegen invoked on invalid type %O{t}"
 
     | And(lhs, rhs)
+    | Xor(lhs, rhs)
     | Or(lhs, rhs) as expr ->
         // Code generation for logical 'and' and 'or' is very similar: we
         // compile the lhs and rhs giving them different target registers, and
@@ -165,6 +184,8 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                 Asm(RV.AND(Reg.r(env.Target), Reg.r(env.Target), Reg.r(rtarget)))
             | Or(_,_) ->
                 Asm(RV.OR(Reg.r(env.Target), Reg.r(env.Target), Reg.r(rtarget)))
+            | Xor(_,_) ->
+                Asm(RV.XOR(Reg.r(env.Target), Reg.r(env.Target), Reg.r(rtarget)))
             | x -> failwith $"BUG: unexpected operation %O{x}"
         // Put everything together
         lAsm ++ rAsm ++ opAsm
@@ -174,8 +195,15 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
         /// to increase its target register)
         let asm = doCodegen env arg
         asm.AddText(RV.SEQZ(Reg.r(env.Target), Reg.r(env.Target)))
+ 
+    | Sqrt(arg) ->
+        let asm: Asm = doCodegen env arg
+        asm.AddText(RV.FSQRT_S(FPReg.r(env.Target), FPReg.r(env.Target)),"Take the square root")
 
     | Eq(lhs, rhs)
+    | LessEq(lhs, rhs)
+    | Large(lhs, rhs)
+    | LargeEq(lhs, rhs)
     | Less(lhs, rhs) as expr ->
         // Code generation for equality and less-than relations is very similar:
         // we compile the lhs and rhs giving them different target registers,
@@ -206,6 +234,9 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
             let labelName = match expr with
                             | Eq(_,_) -> "eq"
                             | Less(_,_) -> "less"
+                            | Large(_,_) -> "large"
+                            | LessEq(_,_) -> "lesseq"
+                            | LargeEq(_,_) -> "largeeq"
                             | x -> failwith $"BUG: unexpected operation %O{x}"
             /// Label to jump to when the comparison is true
             let trueLabel = Util.genSymbol $"%O{labelName}_true"
@@ -219,6 +250,12 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     Asm(RV.BEQ(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
                 | Less(_,_) ->
                     Asm(RV.BLT(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
+                | Large(_,_) ->
+                    Asm(RV.BGT(Reg.r(env.Target), Reg.r(rtarget), trueLabel))   //need to be changed
+                | LessEq(_,_) ->
+                    Asm(RV.BLE(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
+                | LargeEq(_,_) ->
+                    Asm(RV.BGE(Reg.r(env.Target), Reg.r(rtarget), trueLabel))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
 
             // Put everything together
@@ -242,6 +279,12 @@ let rec internal doCodegen (env: CodegenEnv) (node: TypedAST): Asm =
                     Asm(RV.FEQ_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | Less(_,_) ->
                     Asm(RV.FLT_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
+                | Large(_,_) ->
+                    Asm(RV.FGT_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))  //need to be changed
+                | LessEq(_,_) ->
+                    Asm(RV.FLE_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
+                | LargeEq(_,_) ->
+                    Asm(RV.FGE_S(Reg.r(env.Target), FPReg.r(env.FPTarget), FPReg.r(rfptarget)))
                 | x -> failwith $"BUG: unexpected operation %O{x}"
             // Put everything together
             (lAsm ++ rAsm ++ opAsm)

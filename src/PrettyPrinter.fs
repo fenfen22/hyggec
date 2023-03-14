@@ -87,32 +87,25 @@ let rec internal formatASTRec (node: AST.Node<'E,'T>): Tree =
     | FloatVal(value) -> mkTree $"FloatVal %f{value}" node []
     | StringVal(value) -> mkTree $"StringVal \"%s{value}\"" node []
     | Var(name) -> mkTree $"Var %s{name}" node []
-    | Mult(lhs, rhs) ->
-        mkTree "Mult" node [("lhs", formatASTRec lhs)
-                            ("rhs", formatASTRec rhs)]
-    | Add(lhs, rhs) ->
-        mkTree "Add" node [("lhs", formatASTRec lhs)
-                           ("rhs", formatASTRec rhs)]
-    | And(lhs, rhs) ->
-        mkTree "And" node [("lhs", formatASTRec lhs)
-                           ("rhs", formatASTRec rhs)]
-    | Or(lhs, rhs) ->
-        mkTree "Or" node [("lhs", formatASTRec lhs)
-                          ("rhs", formatASTRec rhs)]
-    | Not(arg) ->
-        mkTree "Not" node [("arg", formatASTRec arg)]
-    | Eq(lhs, rhs) ->
-        mkTree "Eq" node [("lhs", formatASTRec lhs)
-                          ("rhs", formatASTRec rhs)]
-    | Less(lhs, rhs) ->
-        mkTree "Less" node [("lhs", formatASTRec lhs)
-                            ("rhs", formatASTRec rhs)]
+    | Mult(lhs, rhs) -> mkTree "Mult" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Div(lhs, rhs) -> mkTree "Div" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Add(lhs, rhs) -> mkTree "Add" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Sub(lhs, rhs) -> mkTree "Sub" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]                       
+    | Rem(lhs, rhs) -> mkTree "Rem" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | And(lhs, rhs) -> mkTree "And" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Or(lhs, rhs) -> mkTree "Or" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Xor(lhs, rhs) -> mkTree "Xor" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Not(arg) -> mkTree "Not" node [("arg", formatASTRec arg)]
+    | Sqrt(arg) -> mkTree "Sqrt" node [("arg", formatASTRec arg)]
+    | Eq(lhs, rhs) -> mkTree "Eq" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Less(lhs, rhs) -> mkTree "Less" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | Large(lhs, rhs) -> mkTree "Large" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | LessEq(lhs, rhs) -> mkTree "LessEq" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
+    | LargeEq(lhs, rhs) -> mkTree "LargeEq" node [("lhs", formatASTRec lhs); ("rhs", formatASTRec rhs)]
     | ReadInt -> mkTree "ReadInt" node []
     | ReadFloat -> mkTree "ReadFloat" node []
-    | Print(arg) ->
-        mkTree "Print" node [("arg", formatASTRec arg)]
-    | PrintLn(arg) ->
-        mkTree "PrintLn" node [("arg", formatASTRec arg)]
+    | Print(arg) -> mkTree "Print" node [("arg", formatASTRec arg)]
+    | PrintLn(arg) -> mkTree "PrintLn" node [("arg", formatASTRec arg)]
     | If(condition, ifTrue, ifFalse) ->
         mkTree "Conditional" node [("condition", formatASTRec condition);
                                    ("ifTrue", formatASTRec ifTrue)
